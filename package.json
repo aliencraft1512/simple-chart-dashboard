@@ -1,0 +1,14 @@
+{
+  "name": "simple-chart-dashboard",
+  "version": "0.0.1",
+  "description": "",
+  "scripts": {
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "author": "Malcolm Meyer",
+  "license": "MIT",
+  "devDependencies": {
+    "cssnano": "^4.1.10"
+  }
+}

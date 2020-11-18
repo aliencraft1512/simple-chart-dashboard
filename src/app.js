@@ -210,7 +210,7 @@ async function init() {
     for (let i = 0; i < cases.length; i++) {
       let date = new Date(today);
       chartData.push({
-        x: date.setDate(date.getDate() - i),
+        x: date.setDate(date.getDate() - (i + 1)),
         y: sorted[i]
       })
     }

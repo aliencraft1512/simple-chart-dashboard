@@ -65,7 +65,7 @@ main {
  transition: opacity 0.1s ease-in;
 }
 footer {
-  background: var(--bg-color);
+  background: var(--bg-secondary-color);
   bottom: 0;
   width: 100%;
   opacity: 0.8;

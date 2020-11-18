@@ -1,3 +1,7 @@
+if (!window.fetch) {
+  alert("Your browser is not compatible with this app. : (")
+}
+
 const Chart = require('chart.js');
 const chartTrendline = require("chartjs-plugin-trendline");
 Chart.plugins.register(chartTrendline);

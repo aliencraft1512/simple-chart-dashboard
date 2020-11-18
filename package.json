@@ -12,6 +12,9 @@
   },
   "author": "Malcolm Meyer",
   "license": "MIT",
+"dependencies":{
+"parcel-bundler":"^1.12.4"
+},
   "devDependencies": {
     "cli-real-favicon": "0.0.8",
     "cssnano": "^4.1.10"

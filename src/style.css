@@ -37,14 +37,14 @@ body.light {
 }
 
 .js-filter:hover, .js-filter:active, .js-filter:focus {
-  filter: invert();
+  filter: contrast(0.5);
 }
 main {
  min-height: calc(100vh - 52px);
  padding: 2rem;
  max-width: 1200px;
  margin: 0 auto;
- opacity: 0;
+ opacity: 1;
  transition: opacity 0.1s ease-in;
 }
 footer {

@@ -13,30 +13,56 @@ async function getData() {
   return data
 }
 
+function filterData(data, state, county) {
+  
+  if (county && state) {
+    return data.filter(f => {
+      return county.toLowerCase().includes(f.properties.Countyname.toLowerCase()) && state.toLowerCase().includes(f.properties.ST_Abbr.toLowerCase()) 
+    })
+  }
+
+  if (county && !state) {
+    return data.filter(f => {
+      return county.includes(f.properties.Countyname.toLowerCase())
+    })
+  }
+
+  return data.filter(f => {
+    return state.toLowerCase().includes(f.properties.ST_Abbr.toLowerCase()) 
+  })
+}
+
 async function init() {
 
-  const covidData = await getData();
+  const rawCovidData = await getData();
 
-  console.log(covidData)
+  const db = rawCovidData.features;
 
   const params = new URLSearchParams(window.location.search);
-  const query = (!params || !params.get("county") || !params.get("state")) ? false : params.get("county");
-  const state = (!params || !params.get("state")) ? false : params.get("state");
-  const urlBase = "https://services9.arcgis.com/6Hv9AANartyT7fJW/ArcGIS/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=";
-  const url = (!query || !state) ?
-  urlBase + `FIPS+IN+%2839119%2C39045,39093,39155,17031,54039%29${(!state) ? '' : `AND%20ST_Abbr='${state}'`}&outFields=*&&returnExceededLimitFeatures=true&returnGeometry=false&f=pgeojson` : `${urlBase}Countyname='${query.charAt(0).toUpperCase() + query.slice(1)}'AND%20ST_Abbr='${(!state) ? "" : state}'&outFields=*&&returnExceededLimitFeatures=true&returnGeometry=false&f=pgeojson`;
-  
-  console.log(query, state, url)
+  const county = (!params || !params.get("county")) ? false : params.get("county");
+  const state = (!params || !params.get("state")) ? false: params.get("state");
 
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => {
-      data.features.map(f => {
-        document.body.querySelector("main").appendChild(createChart(f));
-      });
-      document.body.querySelector("main").style.opacity = 1;
-      // localStorage.setItem("covid_data", JSON.stringify(data));
-    });
+  const filtered = (!county && !state) ? filterData(db, "oh") : filterData(db, state, county)
+
+  filtered.map(f => {
+    document.body.querySelector("main").appendChild(createChart(f));
+  });
+
+  // const urlBase = "https://services9.arcgis.com/6Hv9AANartyT7fJW/ArcGIS/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=";
+  // const url = (!query || !state) ?
+  // urlBase + `FIPS+IN+%2839119%2C39045,39093,39155,17031,54039%29${(!state) ? '' : `AND%20ST_Abbr='${state}'`}&outFields=*&&returnExceededLimitFeatures=true&returnGeometry=false&f=pgeojson` : `${urlBase}Countyname='${query.charAt(0).toUpperCase() + query.slice(1)}'AND%20ST_Abbr='${(!state) ? "" : state}'&outFields=*&&returnExceededLimitFeatures=true&returnGeometry=false&f=pgeojson`;
+  
+  // // console.log(query, state, url)
+
+  // fetch(url)
+  //   .then((res) => res.json())
+  //   .then((data) => {
+  //     data.features.map(f => {
+  //       document.body.querySelector("main").appendChild(createChart(f));
+  //     });
+  //     document.body.querySelector("main").style.opacity = 1;
+  //     // localStorage.setItem("covid_data", JSON.stringify(data));
+  //   });
   // } else {
   //   console.log("using local storage");
   //   const cached = JSON.parse(localStorage.getItem("covid_data"));
@@ -60,7 +86,7 @@ async function init() {
   // }
   
   function createChart(feature) {
-    console.log(feature)
+    // console.log(feature)
     const template = document.querySelector("template").content.cloneNode(true);
     const props = feature.properties;
     template.querySelector("h2").innerHTML = props.Countyname + " County, " + props.ST_Abbr 
@@ -71,8 +97,8 @@ async function init() {
         `
   
     const link = template.querySelector("a");
-    link.href = (query && state) ? window.location.origin : window.location.origin + "/?county=" + props.Countyname + "&state=" + props.ST_Abbr;
-    link.innerText = (query && state) ? "View All" : "Direct Link";
+    link.href = (county && state) ? window.location.origin : window.location.origin + "/?county=" + props.Countyname + "&state=" + props.ST_Abbr;
+    link.innerText = (county && state) ? "View All" : "Direct Link";
     link.style.opacity = 0.8;
   
     const cases = [];

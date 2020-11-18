@@ -24,7 +24,6 @@ async function getData() {
 }
 
 function filterData(data, state, county) {
-  
   if (county && state) {
     return data.filter(f => {
       return county.toLowerCase().includes(f.properties.Countyname.toLowerCase()) && state.toLowerCase().includes(f.properties.ST_Abbr.toLowerCase()) 
@@ -33,7 +32,7 @@ function filterData(data, state, county) {
 
   if (county && !state) {
     return data.filter(f => {
-      return county.includes(f.properties.Countyname.toLowerCase())
+      return county.toLowerCase().includes(f.properties.Countyname.toLowerCase())
     })
   }
 
@@ -68,13 +67,23 @@ async function init() {
     localStorage.setItem("c19t_data_cache", JSON.stringify(rawCovidData));
   }
 
-  const savedParams = (lsTest() && localStorage.getItem("c19t_filter")) ? JSON.parse(localStorage.getItem("c19t_filter")) : false
-  console.log(savedParams)
+  const savedParams = (window.location.search != "") ? false : (lsTest() && localStorage.getItem("c19t_filter")) ? JSON.parse(localStorage.getItem("c19t_filter")) : false
   const params = (savedParams) ? new URLSearchParams("?" + savedParams.filter) : new URLSearchParams(window.location.search);
   const county = (!params || !params.get("county")) ? false : params.get("county");
   const state = (!params || !params.get("state")) ?   false : params.get("state");
 
   console.log({county, state})
+
+  //set filter for next reload of app
+  if (county && !state) {
+    localStorage.setItem("c19t_filter", JSON.stringify({filter: "county=" + county}))
+  }
+  if (!county && state) {
+    localStorage.setItem("c19t_filter", JSON.stringify({filter: "state=" + state}))
+  }
+  if (county && state) {
+    localStorage.setItem("c19t_filter", JSON.stringify({filter: "county=" + county + "&state=" + state}))
+  }
 
   const filtered = (!county && !state) ? filterData(db, "oh") : filterData(db, state, county)
 
@@ -94,7 +103,7 @@ async function init() {
   document.querySelector(".js-filter").addEventListener("click", function() {
     select.size = 20
   });
-  
+
   select.addEventListener("change", function(e) {
     console.log(this.value);
     if (this.value) {

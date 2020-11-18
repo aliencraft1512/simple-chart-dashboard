@@ -1,5 +1,5 @@
 @import url(https://unpkg.com/chota@0.8.0/dist/chota.min.css);
-@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700');
  
 :root {
   --bg-color: #010101;
@@ -23,12 +23,12 @@ html, body {
   overflow-x: hidden;
 }
 main {
- min-height: calc(100vh - 36px);
+ min-height: calc(100vh - 52px);
  padding: 2rem;
  max-width: 1200px;
  margin: 0 auto;
  opacity: 0;
- /* flex: 1; */
+ transition: opacity 0.1s ease-in;
 }
 footer {
   background-color: #101010;

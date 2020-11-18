@@ -1,45 +1,46 @@
-import('https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js').then(() => {
-  init()
-});
+init()
 
 function init() {
 
   const params = new URLSearchParams(window.location.search);
-  const query = (!params || !params.get("county")) ? false : params.get("county");
-  const url = (!query) ?
-  "https://services9.arcgis.com/6Hv9AANartyT7fJW/ArcGIS/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=FIPS+IN+%2839119%2C39045,39093,39155%29&outFields=*&f=pgeojson" : `https://services9.arcgis.com/6Hv9AANartyT7fJW/ArcGIS/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=Countyname='${query.charAt(0).toUpperCase() + query.slice(1)}'AND ST_Abbr='OH'&outFields=*&f=pgeojson`;
+  const query = (!params || !params.get("county") || !params.get("state")) ? false : params.get("county");
+  const state = (!params || !params.get("state")) ? false : params.get("state");
+  const urlBase = "https://services9.arcgis.com/6Hv9AANartyT7fJW/ArcGIS/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=";
+  const url = (!query || !state) ?
+  urlBase + `FIPS+IN+%2839119%2C39045,39093,39155,17031,54039%29${(!state) ? '' : `AND%20ST_Abbr='${state}'`}&outFields=*&f=pgeojson` : `${urlBase}Countyname='${query.charAt(0).toUpperCase() + query.slice(1)}'AND%20ST_Abbr='${(!state) ? "" : state}'&outFields=*&f=pgeojson`;
   
-  if ((lsTest() && !localStorage.getItem("covid_data")) || !lsTest()) {
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        data.features.map(f => {
-          document.body.querySelector("main").appendChild(createChart(f));
-        });
-        document.body.querySelector("main").style.opacity = 1;
-        localStorage.setItem("covid_data", JSON.stringify(data));
-      });
-  } else {
-    console.log("using local storage");
-    const cached = JSON.parse(localStorage.getItem("covid_data"));
-    cached.features.map(f => {
-      document.body.querySelector("main").appendChild(createChart(f));
-    });
-    document.body.querySelector("main").style.opacity = 1;
-    fetch(url)
+  console.log(query, state, url)
+
+  fetch(url)
     .then((res) => res.json())
     .then((data) => {
-      if (data.features[0].properties.DateChecke != cached.features[0].properties.DateChecke || data.features.length != cached.features.length) {
-        localStorage.setItem("covid_data", JSON.stringify(data));
-        console.log('redrawing canvas')
-        document.querySelector("main").innerHTML = "";
-        data.features.map(f => {
-          document.body.querySelector("main").appendChild(createChart(f));
-        });
-        document.body.querySelector("main").style.opacity = 1;
-      }
+      data.features.map(f => {
+        document.body.querySelector("main").appendChild(createChart(f));
+      });
+      document.body.querySelector("main").style.opacity = 1;
+      // localStorage.setItem("covid_data", JSON.stringify(data));
     });
-  }
+  // } else {
+  //   console.log("using local storage");
+  //   const cached = JSON.parse(localStorage.getItem("covid_data"));
+  //   cached.features.map(f => {
+  //     document.body.querySelector("main").appendChild(createChart(f));
+  //   });
+  //   document.body.querySelector("main").style.opacity = 1;
+  //   fetch(url)
+  //   .then((res) => res.json())
+  //   .then((data) => {
+  //     if (data.features[0].properties.DateChecke != cached.features[0].properties.DateChecke || data.features.length != cached.features.length || data.features[0].properties.FIPS != cached.features[0].FIPS) {
+  //       localStorage.setItem("covid_data", JSON.stringify(data));
+  //       console.log('redrawing canvas')
+  //       document.querySelector("main").innerHTML = "";
+  //       data.features.map(f => {
+  //         document.body.querySelector("main").appendChild(createChart(f));
+  //       });
+  //       document.body.querySelector("main").style.opacity = 1;
+  //     }
+  //   });
+  // }
   
   function createChart(feature) {
     console.log(feature)
@@ -53,8 +54,8 @@ function init() {
         `
   
     const link = template.querySelector("a");
-    link.href = (query) ? window.location.origin : window.location.origin + "/?county=" + props.Countyname;
-    link.innerText = (query) ? "View All" : "Direct Link";
+    link.href = (query && state) ? window.location.origin : window.location.origin + "/?county=" + props.Countyname + "&state=" + props.ST_Abbr;
+    link.innerText = (query && state) ? "View All" : "Direct Link";
     link.style.opacity = 0.8;
   
     const cases = [];
@@ -67,6 +68,16 @@ function init() {
       }
     })
   
+    const values = []
+    cases.map((v,i) => {
+      if (i > 0 && i < cases.length -1) {
+        values.push((v - cases[i+1]) / cases[i+1])
+      }
+    })
+
+    const avg = values.reduce((a,b) => { return +a + b});
+    details.innerHTML += `<h4 style="display:flex;">Trending${(avg > 0) ? '&nbsp;<img src="https://icongr.am/material/trending-up.svg?size=24&color=ec0404">' : '&nbsp;<img src="https://icongr.am/material/trending-down.svg?size=24&color=28bd14">'}&nbsp;${(avg * 100).toFixed(2)}%</h4>`;
+
     const sorted = cases
     const today = new Date(props.DateChecke);
     today.setHours(0, 0, 0)
@@ -101,7 +112,7 @@ function init() {
       }]
     };
   
-    new Chart(ctx, {
+    let newChart = new Chart(ctx, {
       type: "line",
       data: chartConfig,
       options: {

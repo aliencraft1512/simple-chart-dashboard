@@ -1,6 +1,6 @@
 @import url(https://unpkg.com/chota@0.8.0/dist/chota.min.css);
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700');
- 
+
 :root {
   --bg-color: #010101;
   --bg-secondary-color: #f3f3f6;
@@ -8,7 +8,7 @@
   --color-lightGrey: #d2d6dd;
   --color-grey: #747681;
   --color-darkGrey: #3f4144;
-  --color-error: #d43939;
+  --color-error: #A9212B;
   --color-success: #28bd14;
   --grid-maxWidth: 120rem;
   --grid-gutter: 2rem;
@@ -22,6 +22,11 @@ html, body {
   /* flex-direction: column; */
   overflow-x: hidden;
 }
+
+body.light {
+  background-color: #fff!important;
+}
+
 main {
  min-height: calc(100vh - 52px);
  padding: 2rem;
@@ -38,6 +43,9 @@ footer {
   font-size: 1rem;
   text-align: center;
   padding: 1rem;
+}
+h2 {
+  margin-top: 0;
 }
 h4 {
   margin: 0;

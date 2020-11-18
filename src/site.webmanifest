@@ -1,0 +1,19 @@
+{
+    "name": "COVID-19 Trends",
+    "short_name": "C-19 Trends",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#6BB9F9",
+    "background_color": "#010101",
+    "display": "standalone"
+}

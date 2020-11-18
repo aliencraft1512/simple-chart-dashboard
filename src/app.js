@@ -1,3 +1,7 @@
+const Chart = require('chart.js');
+const chartTrendline = require("chartjs-plugin-trendline");
+Chart.plugins.register(chartTrendline);
+
 init()
 
 function init() {
@@ -7,7 +11,7 @@ function init() {
   const state = (!params || !params.get("state")) ? false : params.get("state");
   const urlBase = "https://services9.arcgis.com/6Hv9AANartyT7fJW/ArcGIS/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=";
   const url = (!query || !state) ?
-  urlBase + `FIPS+IN+%2839119%2C39045,39093,39155,17031,54039%29${(!state) ? '' : `AND%20ST_Abbr='${state}'`}&outFields=*&f=pgeojson` : `${urlBase}Countyname='${query.charAt(0).toUpperCase() + query.slice(1)}'AND%20ST_Abbr='${(!state) ? "" : state}'&outFields=*&f=pgeojson`;
+  urlBase + `FIPS+IN+%2839119%2C39045,39093,39155,17031,54039%29${(!state) ? '' : `AND%20ST_Abbr='${state}'`}&outFields=*&&returnExceededLimitFeatures=true&returnGeometry=false&f=pgeojson` : `${urlBase}Countyname='${query.charAt(0).toUpperCase() + query.slice(1)}'AND%20ST_Abbr='${(!state) ? "" : state}'&outFields=*&&returnExceededLimitFeatures=true&returnGeometry=false&f=pgeojson`;
   
   console.log(query, state, url)
 
@@ -78,6 +82,8 @@ function init() {
     const avg = values.reduce((a,b) => { return +a + b});
     details.innerHTML += `<h4 style="display:flex;">Trending${(avg > 0) ? '&nbsp;<img src="https://icongr.am/material/trending-up.svg?size=24&color=ec0404">' : '&nbsp;<img src="https://icongr.am/material/trending-down.svg?size=24&color=28bd14">'}&nbsp;${(avg * 100).toFixed(2)}%</h4>`;
 
+    template.querySelector(".js-updated").innerText = props.DateChecke
+
     const sorted = cases
     const today = new Date(props.DateChecke);
     today.setHours(0, 0, 0)
@@ -89,7 +95,7 @@ function init() {
         y: sorted[i]
       })
     }
-    // console.log(chartData)
+
     var ctx = template.querySelector("canvas").getContext("2d");
   
     var chartConfig = {
@@ -105,7 +111,7 @@ function init() {
         data: chartData,
         lineTension: 0.2,
         trendlineLinear: {
-          style: "rgba(255,105,180, .8)",
+          style: 'rgba(169,33,43,0.9)',//"rgba(255,105,180, .8)",
           lineStyle: "dotted",
           width: 2
         }

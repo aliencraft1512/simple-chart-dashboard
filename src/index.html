@@ -3,18 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OH | COVID-19</title>
+  <title>COVID-19 Trends</title>
+  <!-- PWA -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#010101">
+
+  <script>
+    // Check that service workers are supported
+    if ('serviceWorker' in navigator) {
+      // Use the window load event to keep the page load performant
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+  </script>
+
+  <!-- OPENGRAPH -->
+
+  <!-- styles and scripts -->
   <link rel="stylesheet" href="./style.css">
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js'></script>
-  <script src="./chartjs-plugin-trendline.js"></script>
+  <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js'></script> -->
+  <!-- <script src="./chartjs-plugin-trendline.js"></script> -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/object-hash"></script> -->
 </head>
 <body>
+  <div class="js-filter" style="position: fixed;top:30px;left:20px;">
+    <a href=""><img src="https://icongr.am/material/filter.svg?size=28&color=202020"></a>
+  </div>
   <main>
   </main>
   <footer>
     a project by <a href="https://getbounds.com">getBounds</a><br>
-    data from the <a href="https://coronavirus.jhu.edu/">Johns Hopkins Corona Virus Resource Center</a>
+    data from the <a href="https://coronavirus.jhu.edu/">Johns Hopkins Corona Virus Resource Center</a><br>
   </footer>
   <template>
     <section class="row">
@@ -22,12 +47,13 @@
        <h2></h2>
        <div class="js-details"></div>
        <a href=""></a>
+       <div class="text-error" style="font-size:12px;opacity:0.8;">Updated <span class="js-updated"></span></div>
       </div>
       <div class="col-12 col-8-md">
        <canvas style="width:100%;"></canvas>
       </div>
      </section>
   </template>
-  <script src="./app.js"></script>
+  <script src="./app.js" type="module"></script>
 </body>
 </html>

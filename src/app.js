@@ -2,6 +2,8 @@ const Chart = require('chart.js');
 const chartTrendline = require("chartjs-plugin-trendline");
 Chart.plugins.register(chartTrendline);
 
+const Trendline = require('trendline');
+
 document.body.addEventListener("click", function(e) {
   if (e.target.href && e.target.href.includes("?")) {
     localStorage.setItem("c19t_filter", JSON.stringify({filter: e.target.href.split("?")[1]}))
@@ -150,24 +152,37 @@ async function init() {
     link.style.opacity = 0.8;
   
     const cases = [];
-    const chartData = [];
-  
     Object.keys(props).forEach(p => {
-      let value = props[p]
+      let value = (props[p] < 0) ? 0 : props[p]
       if (p.toLowerCase().includes("day")) {
-        cases.push(value)
-      }
-    })
-  
-    const values = []
-    cases.map((v,i) => {
-      if (i > 0 && i < cases.length -1) {
-        values.push((v - cases[i+1]) / cases[i+1])
+        cases.push(value);
       }
     })
 
-    const avg = values.reduce((a,b) => { return +a + b});
-    details.innerHTML += `<h4 style="display:flex;">Trending${(avg > 0) ? '&nbsp;<img src="https://icongr.am/material/trending-up.svg?size=24&color=ec0404">' : '&nbsp;<img src="https://icongr.am/material/trending-down.svg?size=24&color=28bd14">'}&nbsp;${(avg * 100).toFixed(2)}%</h4>`;
+    //trendline
+    const trendlineData = [];
+    const counter = {value: 0};
+    for (let i = cases.length -1; i > -1; i--) {
+      let value = cases[i]
+      trendlineData.push({
+        x: counter.value,
+        y: value
+      })
+      counter.value = counter.value + 1;
+    }
+
+    // console.log(trendlineData)
+    
+    const trend = Trendline(trendlineData, 'x', 'y');
+  
+    if (county) {
+      console.log({name: props.Countyname, trend: trend});
+    }
+
+    if (trend.slope) {
+      details.innerHTML += `<h4 style="display:flex;">Trending${(trend.slope > 0) ? '&nbsp;<img src="https://icongr.am/material/trending-up.svg?size=24&color=ec0404">' : '&nbsp;<img src="https://icongr.am/material/trending-down.svg?size=24&color=28bd14">'}</h4>`;
+    }
+    //&nbsp;${(trend.slope * 100).toFixed(2)}
 
     template.querySelector(".js-updated").innerText = props.DateChecke
 
@@ -175,6 +190,8 @@ async function init() {
     const today = new Date(props.DateChecke);
     today.setHours(0, 0, 0)
   
+    const chartData = [];
+
     for (let i = 0; i < cases.length; i++) {
       let date = new Date(today);
       chartData.push({

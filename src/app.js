@@ -2,8 +2,6 @@ const Chart = require('chart.js');
 const chartTrendline = require("chartjs-plugin-trendline");
 Chart.plugins.register(chartTrendline);
 
-init()
-
 async function getData() {
   const keys = ["OBJECTID","Countyname","ST_Name","ST_Abbr","ST_ID","FIPS","FatalityRa","Confirmedb","DeathsbyPo","PCTPOVALL_","Unemployme","Med_HH_Inc","State_Fata","DateChecke","Confirmed","Deaths","Day_1","Day_2","Day_3","Day_4","Day_5","Day_6","Day_7","Day_8","Day_9","Day_10","Day_11","Day_12","Day_13","Day_14","NewCasebyP"];
 
@@ -32,11 +30,31 @@ function filterData(data, state, county) {
   })
 }
 
-async function init() {
+init();
 
-  const rawCovidData = await getData();
+async function init() {
+  const now = new Date();
+  now.setHours(00,00,00);
+
+  //check for cached data
+  const expireDate = (lsTest() && localStorage.getItem("c19t_expires")) ? JSON.parse(localStorage.getItem("c19t_expires")) : false;
+
+  const expired = (!expireDate) ? true : (new Date(expireDate.expires) > now) ? false : true
+
+  console.log({expired})
+
+  const rawCovidData = (!expired) ? await getData() : (!localStorage.getItem("c19t_data_cache")) ? await getData() : JSON.parse(localStorage.getItem("c19t_data_cache"))
 
   const db = rawCovidData.features;
+
+  //set new expires and data cache if expired
+  if (expired) {
+    console.log("cache expired\nsetting new expires date and data cache")
+    const expires = new Date(now)
+    expires.setDate(expires.getDate() + 1)
+    localStorage.setItem("c19t_expires", JSON.stringify({expires:expires}));
+    localStorage.setItem("c19t_data_cache", JSON.stringify(rawCovidData));
+  }
 
   const params = new URLSearchParams(window.location.search);
   const county = (!params || !params.get("county")) ? false : params.get("county");
@@ -152,6 +170,8 @@ async function init() {
 
     var ctx = template.querySelector("canvas").getContext("2d");
   
+    var ticks = (window.innerWidth < 768) ? false : true;
+
     var chartConfig = {
       datasets: [{
         label: "Cases",
@@ -182,11 +202,13 @@ async function init() {
           xAxes: [{
             ticks: {
               fontColor: "rgba(107,185,249, 0.3)",
+              display: ticks
               // minRotation: 45,
               // maxRotation: 45
             },
             gridLines: {
-              color: "rgba(107,185,249, 0.3)"
+              color: "rgba(107,185,249, 0.3)",
+              display: ticks
             },
             type: "time",
             time: {
@@ -195,10 +217,12 @@ async function init() {
           }],
           yAxes: [{
             gridLines: {
-              color: "rgba(107,185,249, 0.3)"
+              color: "rgba(107,185,249, 0.3)",
+              display: ticks
             },
             ticks: {
-              fontColor: "rgba(107,185,249, 0.3)"
+              fontColor: "rgba(107,185,249, 0.3)",
+              display: ticks
             }
           }]
         }

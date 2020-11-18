@@ -21,13 +21,14 @@ html, body {
   /* display: flex; */
   /* flex-direction: column; */
   overflow-x: hidden;
+  width: 100vw;
 }
 
 body.light {
   background-color: #fff!important;
 }
 .js-filter {
-  position: fixed;
+  position: absolute;
   top: 10px;
   right: 10px;
   background: #202020;
@@ -42,7 +43,7 @@ body.light {
 
 .js-sidebar {
   position: absolute;
-  width: 200px;
+  display: none;
   background: #202020;
   right: -200px;
   top: 0;

@@ -32,7 +32,7 @@
   <!-- <script src="https://cdn.jsdelivr.net/npm/object-hash"></script> -->
 </head>
 <body>
-<div class="js-filter" onclick="{document.querySelector('.js-sidebar').style.right=0;document.querySelector('.js-sidebar').click()}">
+<div class="js-filter" onclick="{document.querySelector('.js-sidebar').style.right=0;document.querySelector('.js-sidebar').style.display='block'}">
     <img src="https://icongr.am/material/filter.svg?size=28&color=14854F">
   </div>
   <section class="js-sidebar">
@@ -40,7 +40,7 @@
       <option>Filter by State</option>
     </select>
   </section>
-  <main  onclick="{document.querySelector('.js-sidebar').style.right=-200 + 'px'}">
+  <main  onclick="{document.querySelector('.js-sidebar').style.display='none'}">
   </main>
   <footer>
     a project by <a href="https://getbounds.com">getBounds</a><br>

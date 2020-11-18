@@ -28,13 +28,14 @@ body.light {
   background-color: #fff!important;
 }
 .js-filter {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   background: var(--bg-secondary-color);
   border-radius: 3px;
-  width: 28px;
   height: 28px;
+  padding: 3px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 28px;
 }
 
 .js-filter:hover, .js-filter:active, .js-filter:focus {

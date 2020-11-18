@@ -3,7 +3,7 @@
 
 :root {
   --bg-color: #010101;
-  --bg-secondary-color: #f3f3f6;
+  --bg-secondary-color: #202020;
   --color-primary: #14854F;
   --color-lightGrey: #d2d6dd;
   --color-grey: #747681;
@@ -31,7 +31,7 @@ body.light {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: #202020;
+  background: var(--bg-secondary-color);
   border-radius: 3px;
   width: 28px;
   height: 28px;
@@ -44,7 +44,7 @@ body.light {
 .js-sidebar {
   position: absolute;
   display: none;
-  background: #202020;
+  background: var(--bg-secondary-color);
   right: -200px;
   top: 0;
   bottom: 0;
@@ -52,7 +52,7 @@ body.light {
 }
 .js-sidebar select,.js-sidebar select > option {
   border-radius: 0;
-  background-color: #202020;
+  background: var(--bg-secondary-color);
   color: white;
   height: auto;
 }
@@ -65,7 +65,7 @@ main {
  transition: opacity 0.1s ease-in;
 }
 footer {
-  background-color: #101010;
+  background: var(--bg-color);
   bottom: 0;
   width: 100%;
   opacity: 0.8;

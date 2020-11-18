@@ -70,6 +70,8 @@ async function init() {
   const county = (!params || !params.get("county")) ? false : params.get("county");
   const state = (!params || !params.get("state")) ? false: params.get("state");
 
+  console.log({county, state})
+
   const filtered = (!county && !state) ? filterData(db, "oh") : filterData(db, state, county)
 
   filtered.map(f => {
@@ -143,8 +145,8 @@ async function init() {
         `
   
     const link = template.querySelector("a");
-    link.href = (county && state) ? window.location.origin + "/?state=" + props.ST_Abbr : window.location.origin + "/?county=" + props.Countyname + "&state=" + props.ST_Abbr;
-    link.innerText = (county && state) ? `View All ${props.ST_Abbr} Counties` : "Direct Link";
+    link.href = (county && state && !county.includes(",") && !state.includes(",")) ? window.location.origin + "/?state=" + props.ST_Abbr : window.location.origin + "/?county=" + props.Countyname + "&state=" + props.ST_Abbr;
+    link.innerText = (county && state && !county.includes(",") && !state.includes(",")) ? `View All ${props.ST_Abbr} Counties` : "Direct Link";
     link.style.opacity = 0.8;
   
     const cases = [];

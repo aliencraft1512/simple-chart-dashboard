@@ -26,7 +26,19 @@ html, body {
 body.light {
   background-color: #fff!important;
 }
+.js-filter {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #202020;
+  border-radius: 3px;
+  width: 28px;
+  height: 28px;
+}
 
+.js-filter:hover, .js-filter:active, .js-filter:focus {
+  filter: invert();
+}
 main {
  min-height: calc(100vh - 52px);
  padding: 2rem;

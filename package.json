@@ -5,7 +5,7 @@
   "scripts": {
     "start": "parcel src/index.html --open",
     "build": "parcel build src/index.html && npm run workbox-cache",
-    "favicon": "real-favicon generate favicon.json faviconData.json src",
+    "favicon": "node node_modules/cli-real-favicon/real-favicon-generate favicon.json faviconData.json src",
     "workbox-wizard": "node node_modules/workbox-cli/build/bin.js wizard",
     "workbox-cache": "node node_modules/workbox-cli/build/bin.js generateSW workbox-config.js",
     "workbox-cache-dist": "node node_modules/workbox-cli/build/bin.js generateSW workbox-config-dist.js"
@@ -13,14 +13,18 @@
   "author": "Malcolm Meyer",
   "license": "MIT",
   "devDependencies": {
-    "cli-real-favicon": "0.0.8",
     "cssnano": "^4.1.10"
   },
   "dependencies": {
+    "cli-real-favicon": "0.0.8",
     "chart.js": "^2.9.4",
     "chartjs": "^0.3.24",
     "chartjs-plugin-trendline": "^0.2.2",
+    "node-fetch": "^2.6.1",
     "parcel-bundler": "^1.12.4",
     "workbox-cli": "^5.1.4"
-  }
+  },
+  "browserslist": [
+    "since 2017-06"
+  ]
 }

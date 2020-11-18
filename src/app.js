@@ -72,9 +72,9 @@ async function init() {
 
   const savedParams = (lsTest() && localStorage.getItem("c19t_filter")) ? JSON.parse(localStorage.getItem("c19t_filter")) : false
 
-  const params = (!savedParams) ? new URLSearchParams(window.location.search) : new URLSearchParams("?" + savedParams.filter);
+  const params = (savedParams) ? new URLSearchParams("?" + savedParams.filter) : new URLSearchParams(window.location.search);
   const county = (!params || !params.get("county")) ? false : params.get("county");
-  const state = (!params || !params.get("state")) ? false: params.get("state");
+  const state = (!params || !params.get("state")) ?   false : params.get("state");
 
   console.log({county, state})
 

@@ -12,9 +12,6 @@
   },
   "author": "Malcolm Meyer",
   "license": "MIT",
-"dependencies":{
-"parcel-bundler":"^1.12.4"
-},
   "devDependencies": {
     "cli-real-favicon": "0.0.8",
     "cssnano": "^4.1.10"
@@ -23,6 +20,7 @@
     "chart.js": "^2.9.4",
     "chartjs": "^0.3.24",
     "chartjs-plugin-trendline": "^0.2.2",
+    "parcel-bundler": "^1.12.4",
     "workbox-cli": "^5.1.4"
   }
 }

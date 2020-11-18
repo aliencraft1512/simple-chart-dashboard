@@ -2,6 +2,14 @@ const Chart = require('chart.js');
 const chartTrendline = require("chartjs-plugin-trendline");
 Chart.plugins.register(chartTrendline);
 
+document.body.addEventListener("click", function(e) {
+  if (e.target.href && e.target.href.includes("?")) {
+    localStorage.setItem("c19t_filter", JSON.stringify({filter: e.target.href.split("?")[1]}))
+  }else{
+    localStorage.removeItem("c19t_filter")
+  }
+})
+
 async function getData() {
   const keys = ["OBJECTID","Countyname","ST_Name","ST_Abbr","ST_ID","FIPS","FatalityRa","Confirmedb","DeathsbyPo","PCTPOVALL_","Unemployme","Med_HH_Inc","State_Fata","DateChecke","Confirmed","Deaths","Day_1","Day_2","Day_3","Day_4","Day_5","Day_6","Day_7","Day_8","Day_9","Day_10","Day_11","Day_12","Day_13","Day_14","NewCasebyP"];
 
@@ -56,7 +64,9 @@ async function init() {
     localStorage.setItem("c19t_data_cache", JSON.stringify(rawCovidData));
   }
 
-  const params = new URLSearchParams(window.location.search);
+  const savedParams = (lsTest() && localStorage.getItem("c19t_filter")) ? JSON.parse(localStorage.getItem("c19t_filter")) : false
+
+  const params = (!savedParams) ? new URLSearchParams(window.location.search) : new URLSearchParams("?" + savedParams.filter);
   const county = (!params || !params.get("county")) ? false : params.get("county");
   const state = (!params || !params.get("state")) ? false: params.get("state");
 
@@ -76,6 +86,9 @@ async function init() {
   })
   select.addEventListener("change", function(e) {
     console.log(this.value);
+    if (lsTest() && this.value) {
+      localStorage.setItem("c19t_filter", JSON.stringify({filter: window.location.origin + "/?state=" + this.value}))
+    }
     if (this.value) {
       window.location = window.location.origin + "/?state=" + this.value
     } 
@@ -130,8 +143,8 @@ async function init() {
         `
   
     const link = template.querySelector("a");
-    link.href = (county && state) ? window.location.origin : window.location.origin + "/?county=" + props.Countyname + "&state=" + props.ST_Abbr;
-    link.innerText = (county && state) ? "View All" : "Direct Link";
+    link.href = (county && state) ? window.location.origin + "/?state=" + props.ST_Abbr : window.location.origin + "/?county=" + props.Countyname + "&state=" + props.ST_Abbr;
+    link.innerText = (county && state) ? `View All ${props.ST_Abbr} Counties` : "Direct Link";
     link.style.opacity = 0.8;
   
     const cases = [];
@@ -230,15 +243,15 @@ async function init() {
     });
     return template
   }
-  
-  function lsTest() {
-    var test = "test";
-    try {
-      localStorage.setItem(test, test);
-      localStorage.removeItem(test);
-      return true;
-    } catch (e) {
-      return false;
-    }
+}
+
+function lsTest() {
+  var test = "test";
+  try {
+    localStorage.setItem(test, test);
+    localStorage.removeItem(test);
+    return true;
+  } catch (e) {
+    return false;
   }
 }

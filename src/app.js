@@ -11,8 +11,6 @@ const Trendline = require('trendline');
 document.body.addEventListener("click", function(e) {
   if (e.target.href && e.target.href.includes("?")) {
     localStorage.setItem("c19t_filter", JSON.stringify({filter: e.target.href.split("?")[1]}))
-  }else{
-    localStorage.removeItem("c19t_filter")
   }
 })
 
@@ -71,7 +69,7 @@ async function init() {
   }
 
   const savedParams = (lsTest() && localStorage.getItem("c19t_filter")) ? JSON.parse(localStorage.getItem("c19t_filter")) : false
-
+  console.log(savedParams)
   const params = (savedParams) ? new URLSearchParams("?" + savedParams.filter) : new URLSearchParams(window.location.search);
   const county = (!params || !params.get("county")) ? false : params.get("county");
   const state = (!params || !params.get("state")) ?   false : params.get("state");
@@ -92,12 +90,16 @@ async function init() {
       select.innerHTML += `<option value="${f.properties.ST_Abbr}">${f.properties.ST_Abbr}</option>`;
     }
   })
+
+  document.querySelector(".js-filter").addEventListener("click", function() {
+    select.size = 20
+  });
+  
   select.addEventListener("change", function(e) {
     console.log(this.value);
-    if (lsTest() && this.value) {
-      localStorage.setItem("c19t_filter", JSON.stringify({filter: window.location.origin + "/?state=" + this.value}))
-    }
     if (this.value) {
+      let filter = "state=" + this.value
+      if (lsTest()) localStorage.setItem("c19t_filter", JSON.stringify({filter: filter}))
       window.location = window.location.origin + "/?state=" + this.value
     } 
   })

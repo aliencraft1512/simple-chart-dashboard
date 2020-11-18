@@ -39,6 +39,22 @@ body.light {
 .js-filter:hover, .js-filter:active, .js-filter:focus {
   filter: contrast(0.5);
 }
+
+.js-sidebar {
+  position: absolute;
+  width: 200px;
+  background: #202020;
+  right: -200px;
+  top: 0;
+  bottom: 0;
+  transition: right 0.2s ease-in;
+}
+.js-sidebar select,.js-sidebar select > option {
+  border-radius: 0;
+  background-color: #202020;
+  color: white;
+  height: auto;
+}
 main {
  min-height: calc(100vh - 52px);
  padding: 2rem;

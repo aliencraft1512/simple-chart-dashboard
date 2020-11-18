@@ -32,10 +32,15 @@
   <!-- <script src="https://cdn.jsdelivr.net/npm/object-hash"></script> -->
 </head>
 <body>
-  <div class="js-filter">
-    <a href=""><img src="https://icongr.am/material/filter.svg?size=28&color=14854F"></a>
+<div class="js-filter" onclick="{document.querySelector('.js-sidebar').style.right=0;document.querySelector('.js-sidebar').click()}">
+    <img src="https://icongr.am/material/filter.svg?size=28&color=14854F">
   </div>
-  <main>
+  <section class="js-sidebar">
+    <select>
+      <option>Filter by State</option>
+    </select>
+  </section>
+  <main  onclick="{document.querySelector('.js-sidebar').style.right=-200 + 'px'}">
   </main>
   <footer>
     a project by <a href="https://getbounds.com">getBounds</a><br>

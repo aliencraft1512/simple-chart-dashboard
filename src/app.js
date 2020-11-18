@@ -48,6 +48,21 @@ async function init() {
     document.body.querySelector("main").appendChild(createChart(f));
   });
 
+  const select = document.querySelector("select");
+  const states = [];
+  db.map(f => {
+    if (!states.includes(f.properties.ST_Abbr)) {
+      states.push(f.properties.ST_Abbr);
+      select.innerHTML += `<option value="${f.properties.ST_Abbr}">${f.properties.ST_Abbr}</option>`;
+    }
+  })
+  select.addEventListener("change", function(e) {
+    console.log(this.value);
+    if (this.value) {
+      window.location = window.location.origin + "/?state=" + this.value
+    } 
+  })
+
   // const urlBase = "https://services9.arcgis.com/6Hv9AANartyT7fJW/ArcGIS/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=";
   // const url = (!query || !state) ?
   // urlBase + `FIPS+IN+%2839119%2C39045,39093,39155,17031,54039%29${(!state) ? '' : `AND%20ST_Abbr='${state}'`}&outFields=*&&returnExceededLimitFeatures=true&returnGeometry=false&f=pgeojson` : `${urlBase}Countyname='${query.charAt(0).toUpperCase() + query.slice(1)}'AND%20ST_Abbr='${(!state) ? "" : state}'&outFields=*&&returnExceededLimitFeatures=true&returnGeometry=false&f=pgeojson`;

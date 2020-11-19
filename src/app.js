@@ -221,11 +221,11 @@ async function init() {
       })
     }
 
-    var ctx = template.querySelector("canvas").getContext("2d");
+    const ctx = template.querySelector("canvas").getContext("2d");
   
-    var ticks = (window.innerWidth < 768) ? false : true;
+    const ticks = (window.innerWidth < 768) ? false : true;
 
-    var chartConfig = {
+    const chartConfig = {
       datasets: [{
         label: "Cases",
         backgroundColor: "rgba(107,185,249, 0.5)",
@@ -245,7 +245,7 @@ async function init() {
       }]
     };
   
-    let newChart = new Chart(ctx, {
+    new Chart(ctx, {
       type: "line",
       data: chartConfig,
       options: {
@@ -286,7 +286,7 @@ async function init() {
 }
 
 function lsTest() {
-  var test = "test";
+  const test = "test";
   try {
     localStorage.setItem(test, test);
     localStorage.removeItem(test);

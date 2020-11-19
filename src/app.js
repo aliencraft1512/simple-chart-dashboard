@@ -196,7 +196,12 @@ async function init() {
     }
 
     if (trend.slope) {
-      details.innerHTML += `<h4 style="display:flex;">Trending${(trend.slope > 0) ? '&nbsp;<img src="https://icongr.am/material/trending-up.svg?size=24&color=ec0404">' : '&nbsp;<img src="https://icongr.am/material/trending-down.svg?size=24&color=28bd14">'}</h4>`;
+      template.querySelector(".js-trending").style.display = "flex";
+      if (trend.slope > 0) {
+        template.querySelector(".js-trending").children[0].style.display = "block" 
+      } else{
+        template.querySelector(".js-trending").children[1].style.display = "block" 
+      }
     }
     //&nbsp;${(trend.slope * 100).toFixed(2)}
 

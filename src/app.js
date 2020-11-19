@@ -2,6 +2,9 @@ if (!window.fetch) {
   alert("Your browser is not compatible with this app. : (")
 }
 
+window.addEventListener('online', () => console.log('came online'));
+window.addEventListener('offline', () => console.log('came offline'));
+
 const Chart = require('chart.js');
 const chartTrendline = require("chartjs-plugin-trendline");
 Chart.plugins.register(chartTrendline);

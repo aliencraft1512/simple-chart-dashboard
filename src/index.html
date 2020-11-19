@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>COVID-19 Trends</title>
+
   <!-- PWA -->
   <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
@@ -12,7 +14,6 @@
   <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#010101">
-
   <script>
     // Check that service workers are supported
     if ('serviceWorker' in navigator && !window.location.origin.includes("localhost")) {
@@ -22,15 +23,33 @@
       });
     }
   </script>
+  <!-- END -->
 
   <!-- OPENGRAPH -->
+  <meta property="og:url" content="https://covid-trends.netlify.app" />
+  <meta property="og:site_name" content="COVID-19 Trends">
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="COVID-19 Trends" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="description" content="COVID-19 Trends in the US by county, displayed in the form of simple charts powered by the Johns Hopkins API.">
+  <meta property="og:description" content="COVID-19 Trends in the US by county, displayed in the form of simple charts powered by the Johns Hopkins API." />
+  <meta property="og:image" content="https://covid-trends.netlify.app/covid-19-trends-image.png" />
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1800">
+  <meta property="og:image:height" content="900">
+  <link rel="author" href="http://www.getbounds.com/">
+  <!-- END -->
 
-  <!-- styles and scripts -->
+  <!-- STYLES AND SCRIPTS -->
   <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700">
   <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js'></script> -->
   <!-- <script src="./chartjs-plugin-trendline.js"></script> -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/object-hash"></script> -->
+  <!-- END -->
+
 </head>
+
 <body onclick="{window.location.hash = '#'}">
   <a class="js-filter" href="#sidebar">
     <img src="/menu_open-24px.svg" style="width:4rem;">
@@ -45,7 +64,8 @@
       </select>
     </main>
     <footer class="text-center">
-      <a href="/?county=fairfield,trumbull,muskingum,lorain,cook,kanawha&state=oh,wv,il" style="text-align: center;">Custom Filter</a>
+      <a href="/?county=fairfield,trumbull,muskingum,lorain,cook,kanawha&state=oh,wv,il"
+        style="text-align: center;">Custom Filter</a>
     </footer>
   </section>
   <section>
@@ -59,20 +79,22 @@
   <template>
     <section class="row">
       <div class="col-12 col-4-md">
-       <h2></h2>
-       <div class="js-details">
-       </div>
-       <h4 style="display:none;" class="js-trending">
-         Trending&nbsp;<img style="display: none;" src="trending-up.svg" alt="trending up arrow"><img style="display: none;" src="trending-down.svg" alt="trending down arrow">
-       </h4>
-       <a href=""></a>
-       <div class="text-error" style="font-size:12px;opacity:0.8;">Updated <span class="js-updated"></span></div>
+        <h2></h2>
+        <div class="js-details">
+        </div>
+        <h4 style="display:none;" class="js-trending">
+          Trending&nbsp;<img style="display: none;" src="trending-up.svg" alt="trending up arrow"><img
+            style="display: none;" src="trending-down.svg" alt="trending down arrow">
+        </h4>
+        <a href=""></a>
+        <div class="text-error" style="font-size:12px;opacity:0.8;">Updated <span class="js-updated"></span></div>
       </div>
       <div class="col-12 col-8-md">
-       <canvas style="width:100%;"></canvas>
+        <canvas style="width:100%;"></canvas>
       </div>
-     </section>
+    </section>
   </template>
   <script src="./app.js"></script>
 </body>
+
 </html>

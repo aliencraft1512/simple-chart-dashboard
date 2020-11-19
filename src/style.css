@@ -1,5 +1,4 @@
-@import url(https://unpkg.com/chota@0.8.0/dist/chota.min.css);
-@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700');
+@import '../node_modules/chota/dist/chota.min.css';
 
 :root {
   --bg-color: #010101;
@@ -14,7 +13,7 @@
   /* --grid-gutter: 2rem; */
   --font-size: 1.6rem;
   --font-color: #6BB9F9;
-  --font-family-sans: "Source Code Pro", "Segoe UI", sans-serif;
+  --font-family-sans: "Source Code Pro", monospace;
   --font-family-mono: monaco, "Consolas", "Lucida Console", monospace;
 }
 html, body {

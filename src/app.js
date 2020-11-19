@@ -5,21 +5,13 @@ if (!window.fetch) {
 const Chart = require('chart.js');
 const chartTrendline = require("chartjs-plugin-trendline");
 Chart.plugins.register(chartTrendline);
-
 const Trendline = require('trendline');
-
-document.body.addEventListener("click", function(e) {
-  if (e.target.href && e.target.href.includes("?")) {
-    localStorage.setItem("c19t_filter", JSON.stringify({filter: e.target.href.split("?")[1]}))
-  }
-})
+const config = new URLSearchParams(window.location.search);
 
 async function getData() {
   const keys = ["OBJECTID","Countyname","ST_Name","ST_Abbr","ST_ID","FIPS","FatalityRa","Confirmedb","DeathsbyPo","PCTPOVALL_","Unemployme","Med_HH_Inc","State_Fata","DateChecke","Confirmed","Deaths","Day_1","Day_2","Day_3","Day_4","Day_5","Day_6","Day_7","Day_8","Day_9","Day_10","Day_11","Day_12","Day_13","Day_14","NewCasebyP"];
-
   const res = await fetch(`https://services9.arcgis.com/6Hv9AANartyT7fJW/ArcGIS/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=OBJECTID%3E0&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=${keys.join(",")}&returnGeometry=false&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token=`)
   const data = await res.json();
-
   return data
 }
 
@@ -29,13 +21,11 @@ function filterData(data, state, county) {
       return county.toLowerCase().includes(f.properties.Countyname.toLowerCase()) && state.toLowerCase().includes(f.properties.ST_Abbr.toLowerCase()) 
     })
   }
-
   if (county && !state) {
     return data.filter(f => {
       return county.toLowerCase().includes(f.properties.Countyname.toLowerCase())
     })
   }
-
   return data.filter(f => {
     return state.toLowerCase().includes(f.properties.ST_Abbr.toLowerCase()) 
   })
@@ -45,16 +35,23 @@ init();
 
 async function init() {
   const now = new Date();
-  now.setHours(00,00,00);
 
-  //check for cached data
+  //check for cached exipres date
   const expireDate = (lsTest() && localStorage.getItem("c19t_expires")) ? JSON.parse(localStorage.getItem("c19t_expires")) : false;
+  const expired = (!expireDate) ? true : (new Date(expireDate.expires) > now) ? false : true;
+  if (expireDate) {
+    console.log({expired: expired}, new Date(expireDate.expires))
+  }
 
-  const expired = (!expireDate) ? true : (new Date(expireDate.expires) > now) ? false : true
+  //set data to api or cache
+  const rawCovidData = (expired) ? await getData() : (!localStorage.getItem("c19t_data_cache")) ? await getData() : JSON.parse(localStorage.getItem("c19t_data_cache"))
 
-  console.log({expired})
-
-  const rawCovidData = (!expired) ? await getData() : (!localStorage.getItem("c19t_data_cache")) ? await getData() : JSON.parse(localStorage.getItem("c19t_data_cache"))
+  //TODO remove this testing only
+  if (config.get("debug")) {
+    const dataUpdate = await getData();
+    console.log({api_date_check: new Date(dataUpdate.features[0].properties.DateChecke)})
+    console.log({cached_expire_date: new Date(expireDate.expires)})
+   }
 
   const db = rawCovidData.features;
 
@@ -62,33 +59,34 @@ async function init() {
   if (expired) {
     console.log("cache expired\nsetting new expires date and data cache")
     const expires = new Date(now)
-    expires.setDate(expires.getDate() + 1)
+    expires.setHours(expires.getHours() + 1)
     localStorage.setItem("c19t_expires", JSON.stringify({expires:expires}));
     localStorage.setItem("c19t_data_cache", JSON.stringify(rawCovidData));
   }
 
+  //used saved query if there is one and there is no query in the url search parameters
   const savedParams = (window.location.search != "") ? false : (lsTest() && localStorage.getItem("c19t_filter")) ? JSON.parse(localStorage.getItem("c19t_filter")) : false
   const params = (savedParams) ? new URLSearchParams("?" + savedParams.filter) : new URLSearchParams(window.location.search);
   const county = (!params || !params.get("county")) ? false : params.get("county");
   const state = (!params || !params.get("state")) ?   false : params.get("state");
 
-  console.log({county, state})
+  console.log({filter: [county, state]})
 
-  //set filter for next reload of app
-  if (county && !state) {
-    localStorage.setItem("c19t_filter", JSON.stringify({filter: "county=" + county}))
-  }
-  if (!county && state) {
-    localStorage.setItem("c19t_filter", JSON.stringify({filter: "state=" + state}))
-  }
-  if (county && state) {
-    localStorage.setItem("c19t_filter", JSON.stringify({filter: "county=" + county + "&state=" + state}))
-  }
+  // //set filter for next reload of app
+  // if (county && !state) {
+  //   localStorage.setItem("c19t_filter", JSON.stringify({filter: "county=" + county}))
+  // }
+  // if (!county && state) {
+  //   localStorage.setItem("c19t_filter", JSON.stringify({filter: "state=" + state}))
+  // }
+  // if (county && state) {
+  //   localStorage.setItem("c19t_filter", JSON.stringify({filter: "county=" + county + "&state=" + state}))
+  // }
 
   const filtered = (!county && !state) ? filterData(db, "oh") : filterData(db, state, county)
 
   filtered.map(f => {
-    document.body.querySelector("main").appendChild(createChart(f));
+    document.body.querySelector("#app").appendChild(createChart(f));
   });
 
   const select = document.querySelector("select");
@@ -108,7 +106,7 @@ async function init() {
     console.log(this.value);
     if (this.value) {
       let filter = "state=" + this.value
-      if (lsTest()) localStorage.setItem("c19t_filter", JSON.stringify({filter: filter}))
+      // if (lsTest()) localStorage.setItem("c19t_filter", JSON.stringify({filter: filter}))
       window.location = window.location.origin + "/?state=" + this.value
     } 
   })

@@ -31,22 +31,31 @@
   <!-- <script src="./chartjs-plugin-trendline.js"></script> -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/object-hash"></script> -->
 </head>
-<body>
-<div class="js-filter" onclick="{document.querySelector('.js-sidebar').style.right=0;document.querySelector('.js-sidebar').style.display='block'}">
-    <img src="https://icongr.am/octicons/search.svg?size=22&color=14854F">
-  </div>
-  <section class="js-sidebar">
-    <select>
-      <option>Filter by State</option>
-    </select>
-    <a href="/?county=fairfield,trumbull,muskingum,lorain,cook,kanawha&state=oh,wv,il" style="text-align: center;">Custom Filter</a>
+<body onclick="{window.location.hash = '#'}">
+  <a class="js-filter" href="#sidebar">
+    <img src="/menu_open-24px.svg" style="width:4rem;">
+  </a>
+  <section id="sidebar">
+    <header>
+      <h1>COVID-19 Trends</h1>
+    </header>
+    <main>
+      <select>
+        <option>Filter by State</option>
+      </select>
+    </main>
+    <footer class="text-center">
+      <a href="/?county=fairfield,trumbull,muskingum,lorain,cook,kanawha&state=oh,wv,il" style="text-align: center;">Custom Filter</a>
+    </footer>
   </section>
-  <main  onclick="{document.querySelector('.js-sidebar').style.display='none';}">
-  </main>
-  <footer>
-    a project by <a href="https://getbounds.com">getBounds</a><br>
-    data from the <a href="https://coronavirus.jhu.edu/">Johns Hopkins Corona Virus Resource Center</a><br>
-  </footer>
+  <section>
+    <div id="app"></div>
+    <footer>
+      a project by <a href="https://getbounds.com">getBounds</a><br>
+      data from the <a href="https://coronavirus.jhu.edu/">Johns Hopkins Corona Virus Resource Center</a><br>
+    </footer>
+  </section>
+
   <template>
     <section class="row">
       <div class="col-12 col-4-md">

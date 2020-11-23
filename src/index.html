@@ -15,15 +15,13 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#010101">
   <script>
-    // Check that service workers are supported
     if ('serviceWorker' in navigator && !window.location.origin.includes("localhost")) {
-      // Use the window load event to keep the page load performant
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js');
       });
     }
   </script>
-  <!-- END -->
+  <!-- END PWA -->
 
   <!-- OPENGRAPH -->
   <meta property="og:url" content="https://covid-trends.netlify.app" />
@@ -38,14 +36,14 @@
   <meta property="og:image:width" content="1800">
   <meta property="og:image:height" content="900">
   <link rel="author" href="https://www.getbounds.com/">
-
+  <!-- TWITTER LARGE CARD -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@getbounds">
   <meta name="twitter:creator" content="@getbounds">
   <meta name="twitter:title" content="COVID-19 Trends">
   <meta name="twitter:description" content="COVID-19 Trends in the US by county, displayed in the form of simple charts powered by the Johns Hopkins API.">
   <meta name="twitter:image" content="https://raw.githubusercontent.com/reyemtm/simple-chart-dashboard/main/src/covid-19-trends-image.png">
-  <!-- END -->
+  <!-- END OPENGRAPH-->
 
   <!-- STYLES AND SCRIPTS -->
   <link rel="stylesheet" href="./style.css">
@@ -53,16 +51,14 @@
   <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js'></script> -->
   <!-- <script src="./chartjs-plugin-trendline.js"></script> -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/object-hash"></script> -->
-  <!-- END -->
-  <script type="text/javascript">
-    window.heap=window.heap||[],heap.load=function(e,t){window.heap.appid=e,window.heap.config=t=t||{};var r=document.createElement("script");r.type="text/javascript",r.async=!0,r.src="https://cdn.heapanalytics.com/js/heap-"+e+".js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(r,a);for(var n=function(e){return function(){heap.push([e].concat(Array.prototype.slice.call(arguments,0)))}},p=["addEventProperties","addUserProperties","clearEventProperties","identify","resetIdentity","removeEventProperty","setEventProperties","track","unsetEventProperty"],o=0;o<p.length;o++)heap[p[o]]=n(p[o])};
-    heap.load("3981966655");
-  </script>
+  <!-- END STYLES -->
+
+  <!-- NETLIFY CODE INJECTION-->
 </head>
 
 <body onclick="{window.location.hash = '#'}">
   <a class="js-filter" href="#sidebar">
-    <img src="/menu_open-24px.svg" style="width:4rem;">
+    <img src="/img/menu_open-24px.svg" style="width:4rem;">
   </a>
   <section id="sidebar">
     <header>
@@ -74,6 +70,9 @@
       </select>
     </main>
     <footer class="text-center bg-grey">
+      <a style="text-align: center;color: white" href="/?clearCache=true">Force Data Refresh</a>
+      <br>
+      <hr>
       <a href="/?county=fairfield,trumbull,muskingum,lorain,cook,kanawha&state=oh,wv,il"
         style="text-align: center;color: white">Custom Filter</a>
     </footer>
@@ -93,8 +92,8 @@
         <div class="js-details">
         </div>
         <h4 style="display:none;" class="js-trending">
-          Trending&nbsp;<img style="display: none;" src="trending-up.svg" alt="trending up arrow"><img
-            style="display: none;" src="trending-down.svg" alt="trending down arrow">
+          Trending&nbsp;<img style="display: none;" src="img/trending-up.svg" alt="trending up arrow"><img
+            style="display: none;" src="img/trending-down.svg" alt="trending down arrow">
         </h4>
         <a href=""></a>
         <div class="text-error" style="font-size:12px;opacity:0.8;">Updated <span class="js-updated"></span></div>

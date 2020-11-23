@@ -39,9 +39,10 @@ init();
 async function init() {
   const now = new Date();
 
-  //check for cached exipres date
+  //check for cached exipres date or clearCache
   const expireDate = (lsTest() && localStorage.getItem("c19t_expires")) ? JSON.parse(localStorage.getItem("c19t_expires")) : false;
-  const expired = (!expireDate) ? true : (new Date(expireDate.expires) > now) ? false : true;
+  const expired = (!expireDate) ? true : (config && config.get("clearCache")) ? true : (new Date(expireDate.expires) > now) ? false : true;
+  
   if (expireDate) {
     console.log({expired: expired}, new Date(expireDate.expires))
   }
@@ -68,7 +69,7 @@ async function init() {
   }
 
   //used saved query if there is one and there is no query in the url search parameters
-  const savedParams = (window.location.search != "") ? false : (lsTest() && localStorage.getItem("c19t_filter")) ? JSON.parse(localStorage.getItem("c19t_filter")) : false
+  const savedParams = (window.location.search != "" && !config.get("clearCache")) ? false : (lsTest() && localStorage.getItem("c19t_filter")) ? JSON.parse(localStorage.getItem("c19t_filter")) : false
   const params = (savedParams) ? new URLSearchParams("?" + savedParams.filter) : new URLSearchParams(window.location.search);
   const county = (!params || !params.get("county")) ? false : params.get("county");
   const state = (!params || !params.get("state")) ?   false : params.get("state");

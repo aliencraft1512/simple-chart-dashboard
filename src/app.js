@@ -161,6 +161,7 @@ async function init() {
       details.innerHTML += `
         <h4>Cases: ${props.Confirmed.toLocaleString()}</h4>
         <h4>Deaths: ${props.Deaths.toLocaleString()}</h4>
+        <h4>Latest Cases: ${props.Day_1.toLocaleString()}</h4>
         `
   
     const link = template.querySelector("a");
@@ -275,6 +276,7 @@ async function init() {
               display: ticks
             },
             ticks: {
+              beginAtZero: true,
               fontColor: "rgba(107,185,249, 0.3)",
               display: ticks
             }

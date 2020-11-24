@@ -159,10 +159,11 @@ async function init() {
     const props = feature.properties;
     template.querySelector("h2").innerHTML = props.Countyname + " County, " + props.ST_Abbr 
     const details = template.querySelector(".js-details");
-      details.innerHTML += `
-        <h4>Cases: ${props.Confirmed.toLocaleString()}</h4>
-        <h4>Deaths: ${props.Deaths.toLocaleString()}</h4>
-        <h4>Latest Cases: ${props.Day_1.toLocaleString()}</h4>
+      details.innerHTML += `       
+        <span>Cases: ${props.Confirmed.toLocaleString()}<br />
+        Deaths: ${props.Deaths.toLocaleString()}<br />
+        New Cases: ${props.Day_1.toLocaleString()}<br />
+        New Case Rate: ${props.NewCasebyP.toFixed(2).toLocaleString()}</span>
         `
   
     const linkDiv = template.querySelector(".js-link");

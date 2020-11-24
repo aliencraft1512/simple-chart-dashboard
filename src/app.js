@@ -12,7 +12,7 @@ const Trendline = require('trendline');
 const config = new URLSearchParams(window.location.search);
 
 async function getData() {
-  const keys = ["OBJECTID","Countyname","ST_Name","ST_Abbr","ST_ID","FIPS","FatalityRa","Confirmedb","DeathsbyPo","PCTPOVALL_","Unemployme","Med_HH_Inc","State_Fata","DateChecke","Confirmed","Deaths","Day_1","Day_2","Day_3","Day_4","Day_5","Day_6","Day_7","Day_8","Day_9","Day_10","Day_11","Day_12","Day_13","Day_14","NewCasebyP"];
+  const keys = ["OBJECTID","Countyname","ST_Name","ST_Abbr","ST_ID","FIPS","FatalityRa","Confirmedb","DeathsbyPo","PCTPOVALL_","Unemployme","Med_HH_Inc","State_Fata","DateChecke","Confirmed","Deaths","Day_1","Day_2","Day_3","Day_4","Day_5","Day_6","Day_7","Day_8","Day_9","Day_10","Day_11","Day_12","Day_13","Day_14","NewCasebyP","TotalPop","url"];
   const res = await fetch(`https://services9.arcgis.com/6Hv9AANartyT7fJW/ArcGIS/rest/services/USCounties_cases_V1/FeatureServer/0/query?where=OBJECTID%3E0&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&resultType=none&distance=0.0&units=esriSRUnit_Meter&returnGeodetic=false&outFields=${keys.join(",")}&returnGeometry=false&returnCentroid=false&featureEncoding=esriDefault&multipatchOption=xyFootprint&maxAllowableOffset=&geometryPrecision=&outSR=&datumTransformation=&applyVCSProjection=false&returnIdsOnly=false&returnUniqueIdsOnly=false&returnCountOnly=false&returnExtentOnly=false&returnQueryGeometry=false&returnDistinctValues=false&cacheHint=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&having=&resultOffset=&resultRecordCount=&returnZ=false&returnM=false&returnExceededLimitFeatures=true&quantizationParameters=&sqlFormat=none&f=pgeojson&token=`)
   const data = await res.json();
   return data
@@ -53,6 +53,7 @@ async function init() {
   //TODO remove this testing only
   if (config.get("debug")) {
     const dataUpdate = await getData();
+    console.log(dataUpdate)
     console.log({api_date_check: new Date(dataUpdate.features[0].properties.DateChecke)})
     console.log({cached_expire_date: new Date(expireDate.expires)})
    }
@@ -164,10 +165,18 @@ async function init() {
         <h4>Latest Cases: ${props.Day_1.toLocaleString()}</h4>
         `
   
-    const link = template.querySelector("a");
+    const linkDiv = template.querySelector(".js-link");
+    const link = document.createElement("a");
     link.href = (county && state && !county.includes(",") && !state.includes(",")) ? window.location.origin + "/?state=" + props.ST_Abbr : window.location.origin + "/?county=" + props.Countyname + "&state=" + props.ST_Abbr;
     link.innerText = (county && state && !county.includes(",") && !state.includes(",")) ? `View All ${props.ST_Abbr} Counties` : "Direct Link";
-    link.style.opacity = 0.8;
+    linkDiv.appendChild(link)
+    
+    const link2 = document.createElement("a");
+    link2.href = props.url;
+    link2.setAttribute("target", "_blank")
+    link2.innerText = " | Infographic";
+    linkDiv.appendChild(link2)
+    
   
     const cases = [];
     Object.keys(props).forEach(p => {

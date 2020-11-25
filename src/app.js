@@ -2,6 +2,8 @@ if (!window.fetch) {
   alert("Your browser is not compatible with this app. : (")
 }
 
+//https://services9.arcgis.com/6Hv9AANartyT7fJW/ArcGIS/rest/services/USCounties_cases_V1/FeatureServer/0
+
 window.addEventListener('online', () => console.log('came online'));
 window.addEventListener('offline', () => console.log('came offline'));
 
@@ -173,9 +175,10 @@ async function init() {
     linkDiv.appendChild(link)
     
     const link2 = document.createElement("a");
-    link2.href = props.url;
+    link2.href = "https://covidactnow.org/us/" + props.ST_Name.toLowerCase() + "-" + props.ST_Abbr.toLowerCase() + "/county/" + props.Countyname.toLowerCase().replace(/ /g,"_") + "_county"
+    //https://covidactnow.org/us/ohio-oh/county/tuscarawas_county?s=1368354
     link2.setAttribute("target", "_blank")
-    link2.innerText = " | Infographic";
+    link2.innerText = " | More Details";
     linkDiv.appendChild(link2)
     
   
